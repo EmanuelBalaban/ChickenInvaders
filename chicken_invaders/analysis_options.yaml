@@ -1,0 +1,6 @@
+include: package:flame_lint/analysis_options.yaml
+
+linter:
+  rules:
+    directives_ordering: false
+    sort_pub_dependencies: false
