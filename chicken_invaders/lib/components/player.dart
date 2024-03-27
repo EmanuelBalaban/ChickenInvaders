@@ -4,10 +4,12 @@ import 'package:flutter/services.dart';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame/image_composition.dart';
 
 import 'package:chicken_invaders/chicken_invaders.dart';
 import 'package:chicken_invaders/components/collision_block.dart';
 import 'package:chicken_invaders/components/joystick.dart';
+import 'package:chicken_invaders/mixins/debug_state.dart';
 import 'package:chicken_invaders/utils.dart';
 
 enum PlayerState {
@@ -17,11 +19,18 @@ enum PlayerState {
   doubleJump,
   wallJump,
   fall,
-  hit,
+  hit;
+
+  @override
+  String toString() => name;
 }
 
 class Player extends SpriteAnimationGroupComponent<PlayerState>
-    with HasGameRef<ChickenInvaders>, KeyboardHandler, CollisionCallbacks {
+    with
+        HasGameRef<ChickenInvaders>,
+        KeyboardHandler,
+        CollisionCallbacks,
+        DebugState {
   Player({
     required this.character,
     this.joystick,
@@ -84,7 +93,7 @@ class Player extends SpriteAnimationGroupComponent<PlayerState>
   void update(double dt) {
     _updatePlayerState();
     _updatePlayerMovement(dt);
-    _checkCollisions();
+    _checkCollisions(horizontal: true);
     _applyGravity(dt);
     _checkCollisions(horizontal: false);
 
@@ -121,19 +130,6 @@ class Player extends SpriteAnimationGroupComponent<PlayerState>
     return super.onKeyEvent(event, keysPressed);
   }
 
-  @override
-  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
-    // print('on collision: $intersectionPoints, $other');
-    super.onCollision(intersectionPoints, other);
-  }
-
-  @override
-  void onCollisionStart(
-      Set<Vector2> intersectionPoints, PositionComponent other) {
-    print('on collision start: $intersectionPoints, $other');
-    super.onCollisionStart(intersectionPoints, other);
-  }
-
   /// Updates player's [movement] and [speed] based on [joystick]'s state.
   void _updateJoystick() {
     movement = joystick?.relativeDelta ?? Vector2.zero();
@@ -154,9 +150,9 @@ class Player extends SpriteAnimationGroupComponent<PlayerState>
     }
 
     if (velocity.y > 0) {
-      state = PlayerState.jump;
-    } else if (velocity.y < 0) {
       state = PlayerState.fall;
+    } else if (velocity.y < 0) {
+      state = PlayerState.jump;
     }
 
     current = state;
@@ -178,7 +174,7 @@ class Player extends SpriteAnimationGroupComponent<PlayerState>
     position.x += velocity.x * dt;
   }
 
-  void _checkCollisions({bool horizontal = true}) {
+  void _checkCollisions({required bool horizontal}) {
     isOnGround = false;
 
     for (final block in collisionBlocks) {
