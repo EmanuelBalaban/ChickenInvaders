@@ -5,4 +5,4 @@
 ## Getting Started :rocket:
 
 1. Install [Flutter](https://docs.flutter.dev/get-started/install)
-1. Install [Tiled](https://www.mapeditor.org/)
+2. Install [Tiled](https://www.mapeditor.org/)

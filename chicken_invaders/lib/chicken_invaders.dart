@@ -9,16 +9,17 @@ import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 
+import 'package:chicken_invaders/components/joystick.dart';
 import 'package:chicken_invaders/components/level.dart';
 import 'package:chicken_invaders/components/player.dart';
 
 class ChickenInvaders extends FlameGame
-    with HasKeyboardHandlerComponents, DragCallbacks {
+    with HasKeyboardHandlerComponents, DragCallbacks, HasCollisionDetection {
   @override
   Color backgroundColor() => const Color(0xFF211F30);
 
   late final Player player;
-  JoystickComponent? joystick;
+  Joystick? joystick;
 
   bool showJoystick = Platform.isAndroid || Platform.isIOS;
 
@@ -40,11 +41,13 @@ class ChickenInvaders extends FlameGame
 
     world = Level(name: 'Level-01', player: player);
 
+    add(ScreenHitbox());
+
     return super.onLoad();
   }
 
   void addJoystick() {
-    joystick = JoystickComponent(
+    joystick = Joystick(
       knob: SpriteComponent.fromImage(
         images.fromCache('HUD/Knob.png'),
       ),
