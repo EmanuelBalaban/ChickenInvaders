@@ -3,17 +3,20 @@ import 'dart:async';
 import 'package:flame/components.dart';
 import 'package:flame_tiled/flame_tiled.dart';
 
-import 'package:chicken_invaders/components/collision_block.dart';
-import 'package:chicken_invaders/components/player.dart';
+import 'package:chicken_invaders/components/ship.dart';
+import 'package:chicken_invaders/old_components/collision_block.dart';
+import 'package:chicken_invaders/old_components/player.dart';
 
 class Level extends World {
   Level({
     required this.name,
     required this.player,
+    required this.ship,
   });
 
   final String name;
   final Player player;
+  final Ship ship;
 
   late TiledComponent level;
   List<CollisionBlock> collisionBlocks = [];
@@ -34,7 +37,11 @@ class Level extends World {
       switch (spawnPoint.type) {
         case 'Player':
           player.position = Vector2(spawnPoint.x, spawnPoint.y);
-          add(player);
+          // add(player);
+          break;
+        case 'Ship':
+          ship.position = Vector2(spawnPoint.x, spawnPoint.y);
+          add(ship);
           break;
       }
     }

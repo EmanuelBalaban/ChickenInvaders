@@ -4,13 +4,12 @@ import 'package:flutter/services.dart';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flame/image_composition.dart';
 
 import 'package:chicken_invaders/chicken_invaders.dart';
-import 'package:chicken_invaders/components/collision_block.dart';
-import 'package:chicken_invaders/components/joystick.dart';
 import 'package:chicken_invaders/mixins/debug_state.dart';
-import 'package:chicken_invaders/utils.dart';
+import 'package:chicken_invaders/old_components/collision_block.dart';
+import 'package:chicken_invaders/old_components/joystick.dart';
+import 'package:chicken_invaders/utils/collision_detection.dart';
 
 enum PlayerState {
   idle,
