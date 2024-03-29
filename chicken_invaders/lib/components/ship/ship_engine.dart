@@ -18,27 +18,19 @@ enum ShipEngineType with DebugEnum {
   final String assetName;
 }
 
-enum ShipEngineEffect with DebugEnum {
-  idle('Idle', 3),
-  powering('Powering', 4);
-
-  const ShipEngineEffect(this.assetName, this.sequenceAmount);
-
-  final String assetName;
-  final int sequenceAmount;
-}
-
 class ShipEngine extends SpriteGroupComponent<ShipEngineType>
     with HasGameRef<ChickenInvaders> {
   ShipEngine({
     super.position,
+    super.anchor,
+    super.priority,
     super.current = ShipEngineType.base,
   }) {
-    debugMode = true;
+    // debugMode = true;
   }
 
   @override
-  FutureOr<void> onLoad() {
+  FutureOr<void> onLoad() async {
     sprites = Map.fromEntries(
       ShipEngineType.values.map(
         (state) => MapEntry(
@@ -48,7 +40,7 @@ class ShipEngine extends SpriteGroupComponent<ShipEngineType>
       ),
     );
 
-    scale = Vector2(1.0, 1.0);
+    // scale = Vector2(0.5, 0.5);
 
     return super.onLoad();
   }

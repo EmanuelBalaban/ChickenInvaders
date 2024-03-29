@@ -4,7 +4,7 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 
 import 'package:chicken_invaders/chicken_invaders.dart';
-import 'package:chicken_invaders/components/bullet.dart';
+import 'package:chicken_invaders/components/projectile.dart';
 import 'package:chicken_invaders/mixins/debug_enum.dart';
 
 enum BlueBirdState with DebugEnum {
@@ -62,11 +62,11 @@ class BlueBird extends SpriteAnimationGroupComponent<BlueBirdState>
   ) {
     super.onCollisionStart(intersectionPoints, other);
 
-    if (other is Bullet) {
+    if (other is Projectile) {
       current = BlueBirdState.hit;
       _accumulatedDt = 0;
 
-      _health -= 20;
+      _health -= other.current?.damage ?? 0;
 
       if (_health <= 0) {
         removeFromParent();

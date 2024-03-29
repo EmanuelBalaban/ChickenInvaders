@@ -4,22 +4,44 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 
 import 'package:chicken_invaders/chicken_invaders.dart';
+import 'package:chicken_invaders/components/ship/ship.dart';
 
 enum ProjectileType {
-  autoCannonBullet('Auto cannon bullet', 4),
-  bigSpaceGun('Big Space Gun', 10),
-  rocket('Rocket', 3),
-  zapper('Zapper', 8);
+  autoCannonBullet(
+    assetName: 'Auto cannon bullet',
+    sequenceAmount: 4,
+    damage: 20,
+  ),
+  bigSpaceGun(
+    assetName: 'Big Space Gun',
+    sequenceAmount: 10,
+    damage: 100,
+  ),
+  rocket(
+    assetName: 'Rocket',
+    sequenceAmount: 3,
+    damage: 75,
+  ),
+  zapper(
+    assetName: 'Zapper',
+    sequenceAmount: 8,
+    damage: 50,
+  );
 
-  const ProjectileType(this.assetName, this.sequenceAmount);
+  const ProjectileType({
+    required this.assetName,
+    required this.sequenceAmount,
+    required this.damage,
+  });
 
   final String assetName;
   final int sequenceAmount;
+  final double damage;
 }
 
-class Bullet extends SpriteAnimationGroupComponent<ProjectileType>
+class Projectile extends SpriteAnimationGroupComponent<ProjectileType>
     with HasGameRef<ChickenInvaders>, CollisionCallbacks {
-  Bullet({
+  Projectile({
     super.position,
     super.current = ProjectileType.autoCannonBullet,
   }) {
@@ -48,7 +70,7 @@ class Bullet extends SpriteAnimationGroupComponent<ProjectileType>
       ),
     );
 
-    scale = Vector2(0.5, 0.5);
+    scale = Vector2(0.6, 0.6);
 
     return super.onLoad();
   }
@@ -67,7 +89,9 @@ class Bullet extends SpriteAnimationGroupComponent<ProjectileType>
   ) {
     super.onCollisionStart(intersectionPoints, other);
 
-    removeFromParent();
+    if (other is! Ship) {
+      removeFromParent();
+    }
   }
 
   SpriteAnimation _createAnimation({

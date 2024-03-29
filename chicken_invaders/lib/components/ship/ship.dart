@@ -6,39 +6,21 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 
 import 'package:chicken_invaders/chicken_invaders.dart';
-import 'package:chicken_invaders/components/bullet.dart';
-import 'package:chicken_invaders/mixins/debug_enum.dart';
+import 'package:chicken_invaders/components/ship/ship_base.dart';
+import 'package:chicken_invaders/components/ship/ship_engine.dart';
+import 'package:chicken_invaders/components/ship/ship_engine_effect.dart';
+import 'package:chicken_invaders/components/ship/ship_settings.dart';
+import 'package:chicken_invaders/components/ship/ship_weapon.dart';
 
-enum ShipHealthState with DebugEnum {
-  fullHealth('Full health'),
-  slightDamage('Slight damage'),
-  damaged('Damaged'),
-  veryDamaged('Very damaged');
-
-  const ShipHealthState(this.assetName);
-
-  final String assetName;
-}
-
-enum ShipShieldType with DebugEnum {
-  front,
-  frontAndSide,
-  round,
-  invincibility;
-}
-
-enum ShipWeaponType with DebugEnum {
-  autoCannon,
-  bigSpaceGun,
-  rockets,
-  zapper;
-}
-
-class Ship extends SpriteGroupComponent<ShipHealthState>
+class Ship extends PositionComponent
     with HasGameRef<ChickenInvaders>, KeyboardHandler, CollisionCallbacks {
-  Ship() {
+  Ship({
+    required this.settings,
+  }) {
     // debugMode = true;
   }
+
+  final ShipSettings settings;
 
   // Constants
   static const _horizontalSpeed = 6.0;
@@ -47,11 +29,15 @@ class Ship extends SpriteGroupComponent<ShipHealthState>
   static const _verticalDeceleration = 0.01;
   static const _horizontalTerminalVelocity = 300.0;
   static const _verticalTerminalVelocity = 150.0;
-  static const _bulletCoolDownDt = 0.1;
 
   // Variables
+  late final ShipBase _base;
+  late final ShipEngine _engine;
+  late final ShipEngineEffect _engineEffect;
+  late final ShipWeapon _weapon;
+
   bool _spaceDown = false;
-  double _bulletAccumulatedDt = 0;
+  double _projectileAccumulatedDt = 0;
 
   Vector2 _movement = Vector2.zero();
   final _velocity = Vector2.zero();
@@ -63,34 +49,63 @@ class Ship extends SpriteGroupComponent<ShipHealthState>
 
   @override
   FutureOr<void> onLoad() async {
-    sprites = Map.fromEntries(
-      ShipHealthState.values.map(
-        (state) => MapEntry(
-          state,
-          _createSprite(state: state),
-        ),
-      ),
+    size = Vector2(48, 48);
+
+    final shipHealth = ShipHealthState.values.firstWhere(
+      (element) => settings.health >= element.threshold,
     );
 
-    current = ShipHealthState.fullHealth;
+    _base = ShipBase(
+      position: size / 2,
+      anchor: Anchor.center,
+      current: shipHealth,
+    );
+
+    await add(_base);
+
+    _engine = ShipEngine(
+      priority: -1,
+      position: size / 2,
+      anchor: Anchor.center,
+      current: settings.engine,
+    );
+
+    await add(_engine);
+
+    _engineEffect = ShipEngineEffect(
+      priority: -2,
+      position: size / 2,
+      anchor: Anchor.center,
+      engineType: settings.engine,
+    );
+    await add(_engineEffect);
+
+    _weapon = ShipWeapon(
+      priority: -1,
+      position: size / 2,
+      anchor: Anchor.center,
+      current: settings.weapon,
+    );
+    await add(_weapon);
 
     final hitbox = RectangleHitbox.relative(
       Vector2.all(0.6),
       parentSize: size,
+      anchor: Anchor.center,
     );
 
-    add(hitbox);
+    await add(hitbox);
 
     return super.onLoad();
   }
 
   @override
   void update(double dt) {
-    _bulletAccumulatedDt += dt;
+    _projectileAccumulatedDt += dt;
     if (_spaceDown) {
-      if (_bulletAccumulatedDt >= _bulletCoolDownDt) {
-        _bulletAccumulatedDt = 0;
-        _fireBullet();
+      if (_projectileAccumulatedDt >= settings.weapon.coolDownDt) {
+        _projectileAccumulatedDt = 0;
+        _weapon.fire();
       }
     }
 
@@ -128,6 +143,13 @@ class Ship extends SpriteGroupComponent<ShipHealthState>
     }
     if (!_canMoveDown && _velocity.y > 0) {
       _velocity.y = 0;
+    }
+
+    // Update engine effect
+    if (_movement != Vector2.zero()) {
+      _engineEffect.current = ShipEngineEffectType.powering;
+    } else {
+      _engineEffect.current = ShipEngineEffectType.idle;
     }
 
     // Update position
@@ -215,23 +237,4 @@ class Ship extends SpriteGroupComponent<ShipHealthState>
     _canMoveUp = true;
     _canMoveDown = true;
   }
-
-  void _fireBullet() {
-    final bullet = Bullet();
-
-    game.world.add(bullet);
-
-    final position = positionOfAnchor(Anchor.topCenter) - bullet.size / 2;
-
-    bullet.position = position;
-  }
-
-  Sprite _createSprite({
-    required ShipHealthState state,
-  }) =>
-      Sprite(
-        game.images.fromCache(
-          'Main Ship/Main Ship - Bases/Main Ship - Base - ${state.assetName}.png',
-        ),
-      );
 }

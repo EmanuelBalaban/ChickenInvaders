@@ -9,7 +9,10 @@ import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 
 import 'package:chicken_invaders/components/level.dart';
-import 'package:chicken_invaders/components/ship.dart';
+import 'package:chicken_invaders/components/ship/ship.dart';
+import 'package:chicken_invaders/components/ship/ship_engine.dart';
+import 'package:chicken_invaders/components/ship/ship_settings.dart';
+import 'package:chicken_invaders/components/ship/ship_weapon.dart';
 import 'package:chicken_invaders/old_components/joystick.dart';
 import 'package:chicken_invaders/old_components/player.dart';
 import 'package:chicken_invaders/utils/platform.dart';
@@ -39,7 +42,13 @@ class ChickenInvaders extends FlameGame
       joystick: joystick,
     );
 
-    ship = Ship();
+    ship = Ship(
+      settings: const ShipSettings(
+        health: 100,
+        engine: ShipEngineType.base,
+        weapon: ShipWeaponType.autoCannon,
+      ),
+    );
 
     world = Level(
       name: 'Level-01',

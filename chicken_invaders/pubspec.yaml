@@ -39,6 +39,10 @@ flutter:
     - assets/images/Main Characters/Virtual Guy/
     - assets/images/HUD/
     - assets/images/Main Ship/Main Ship - Bases/
+    - assets/images/Main Ship/Main Ship - Engine Effects/
+    - assets/images/Main Ship/Main Ship - Engines/
+    - assets/images/Main Ship/Main Ship - Shields/
+    - assets/images/Main Ship/Main Ship - Weapons/
     - assets/images/Main ship weapons/
     - assets/images/Enemies/BlueBird/
 
