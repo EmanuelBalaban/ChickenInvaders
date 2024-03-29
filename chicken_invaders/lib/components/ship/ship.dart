@@ -11,16 +11,19 @@ import 'package:chicken_invaders/components/ship/ship_engine.dart';
 import 'package:chicken_invaders/components/ship/ship_engine_effect.dart';
 import 'package:chicken_invaders/components/ship/ship_settings.dart';
 import 'package:chicken_invaders/components/ship/ship_weapon.dart';
+import 'package:chicken_invaders/old_components/joystick.dart';
 
 class Ship extends PositionComponent
     with HasGameRef<ChickenInvaders>, KeyboardHandler, CollisionCallbacks {
   Ship({
     required this.settings,
+    this.joystick,
   }) {
     // debugMode = true;
   }
 
   final ShipSettings settings;
+  final Joystick? joystick;
 
   // Constants
   static const _horizontalSpeed = 6.0;
@@ -229,6 +232,25 @@ class Ship extends PositionComponent
     _allowAllMovement();
 
     super.onCollisionEnd(other);
+  }
+
+  @override
+  void onMount() {
+    joystick?.addListener(_updateJoystick);
+
+    super.onMount();
+  }
+
+  @override
+  void onRemove() {
+    joystick?.removeListener(_updateJoystick);
+
+    super.onRemove();
+  }
+
+  /// Updates player's [_movement] based on [joystick]'s state.
+  void _updateJoystick() {
+    _movement = joystick?.relativeDelta ?? Vector2.zero();
   }
 
   void _allowAllMovement() {

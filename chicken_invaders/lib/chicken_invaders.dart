@@ -48,6 +48,7 @@ class ChickenInvaders extends FlameGame
         engine: ShipEngineType.base,
         weapon: ShipWeaponType.autoCannon,
       ),
+      joystick: joystick,
     );
 
     world = Level(
