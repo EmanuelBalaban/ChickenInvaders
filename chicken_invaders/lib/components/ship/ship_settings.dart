@@ -1,14 +1,15 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+
 import 'package:chicken_invaders/components/ship/ship_engine.dart';
 import 'package:chicken_invaders/components/ship/ship_weapon.dart';
 
-class ShipSettings {
-  const ShipSettings({
-    required this.health,
-    required this.engine,
-    required this.weapon,
-  });
+part 'ship_settings.freezed.dart';
 
-  final double health;
-  final ShipEngineType engine;
-  final ShipWeaponType weapon;
+@freezed
+class ShipSettings with _$ShipSettings {
+  const factory ShipSettings({
+    required double health,
+    required ShipEngineType engine,
+    required ShipWeaponType weapon,
+  }) = _ShipSettings;
 }

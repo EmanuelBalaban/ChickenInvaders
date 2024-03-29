@@ -63,6 +63,13 @@ class ShipWeapon extends SpriteAnimationGroupComponent<ShipWeaponType>
   // Constants
   static const _animationStepTime = 0.05;
 
+  @override
+  set current(ShipWeaponType? value) {
+    super.current = value;
+
+    _setupAnimationTicker();
+  }
+
   void fire() {
     animationTicker?.reset();
 
@@ -152,6 +159,12 @@ class ShipWeapon extends SpriteAnimationGroupComponent<ShipWeaponType>
       ),
     );
 
+    _setupAnimationTicker();
+
+    return super.onLoad();
+  }
+
+  void _setupAnimationTicker() {
     animationTicker?.onComplete = () {
       animationTicker?.currentIndex = 0;
       animationTicker?.clock = 0;
@@ -159,8 +172,6 @@ class ShipWeapon extends SpriteAnimationGroupComponent<ShipWeaponType>
     };
 
     animationTicker?.setToLast();
-
-    return super.onLoad();
   }
 
   SpriteAnimation _createAnimation({

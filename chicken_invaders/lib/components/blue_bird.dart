@@ -27,10 +27,14 @@ class BlueBird extends SpriteAnimationGroupComponent<BlueBirdState>
   static const _animationStepTime = 0.05; // 50 ms
   final double _hitAnimationTime =
       BlueBirdState.hit.sequenceAmount * _animationStepTime;
+  static const _moves = 300;
+  static const _speed = 10;
 
   // Variables
   double _accumulatedDt = 0;
   double _health = 100;
+  int _remainingMoves = _moves;
+  bool _moveLeft = true;
 
   @override
   FutureOr<void> onLoad() {
@@ -82,6 +86,14 @@ class BlueBird extends SpriteAnimationGroupComponent<BlueBirdState>
       if (_accumulatedDt >= _hitAnimationTime) {
         current = BlueBirdState.flying;
       }
+    }
+
+    position.x += _speed * dt * (_moveLeft ? -1 : 1);
+    _remainingMoves--;
+
+    if (_remainingMoves == 0) {
+      _moveLeft = !_moveLeft;
+      _remainingMoves = _moves;
     }
 
     super.update(dt);

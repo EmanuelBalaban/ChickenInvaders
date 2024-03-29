@@ -16,14 +16,29 @@ import 'package:chicken_invaders/old_components/joystick.dart';
 class Ship extends PositionComponent
     with HasGameRef<ChickenInvaders>, KeyboardHandler, CollisionCallbacks {
   Ship({
-    required this.settings,
+    required ShipSettings settings,
     this.joystick,
-  }) {
+  }) : _settings = settings {
     // debugMode = true;
   }
 
-  final ShipSettings settings;
   final Joystick? joystick;
+
+  ShipSettings get settings => _settings;
+
+  set settings(ShipSettings settings) {
+    _settings = settings;
+
+    final shipHealth = ShipHealthState.fromHealth(_settings.health);
+
+    _base.current = shipHealth;
+    _engine.current = _settings.engine;
+
+    // TODO: fix
+    // _engineEffect.engineType = _settings.engine;
+
+    _weapon.current = _settings.weapon;
+  }
 
   // Constants
   static const _horizontalSpeed = 6.0;
@@ -34,6 +49,7 @@ class Ship extends PositionComponent
   static const _verticalTerminalVelocity = 150.0;
 
   // Variables
+  ShipSettings _settings;
   late final ShipBase _base;
   late final ShipEngine _engine;
   late final ShipEngineEffect _engineEffect;
@@ -54,9 +70,7 @@ class Ship extends PositionComponent
   FutureOr<void> onLoad() async {
     size = Vector2(48, 48);
 
-    final shipHealth = ShipHealthState.values.firstWhere(
-      (element) => settings.health >= element.threshold,
-    );
+    final shipHealth = ShipHealthState.fromHealth(settings.health);
 
     _base = ShipBase(
       position: size / 2,
@@ -171,6 +185,12 @@ class Ship extends PositionComponent
       _spaceDown = event is RawKeyDownEvent;
     }
 
+    // Switch weapon
+    if (event.logicalKey == LogicalKeyboardKey.enter &&
+        event is RawKeyUpEvent) {
+      _switchWeapon();
+    }
+
     for (final keyPressed in keysPressed) {
       if (keyPressed == LogicalKeyboardKey.arrowLeft ||
           keyPressed == LogicalKeyboardKey.keyA) {
@@ -258,5 +278,14 @@ class Ship extends PositionComponent
     _canMoveRight = true;
     _canMoveUp = true;
     _canMoveDown = true;
+  }
+
+  void _switchWeapon() {
+    final nextWeaponIndex =
+        (settings.weapon.index + 1) % ShipWeaponType.values.length;
+
+    settings = settings.copyWith(
+      weapon: ShipWeaponType.values[nextWeaponIndex],
+    );
   }
 }

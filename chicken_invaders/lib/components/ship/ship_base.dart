@@ -18,6 +18,11 @@ enum ShipHealthState with DebugEnum {
   /// The ship will have the current health state until health value goes below
   /// this threshold.
   final double threshold;
+
+  factory ShipHealthState.fromHealth(double health) =>
+      ShipHealthState.values.firstWhere(
+        (element) => health >= element.threshold,
+      );
 }
 
 class ShipBase extends SpriteGroupComponent<ShipHealthState>

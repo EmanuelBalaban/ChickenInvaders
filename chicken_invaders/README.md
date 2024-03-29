@@ -20,3 +20,23 @@ Chicken Invaders game built with Flutter Flame.
   - [ ] Main menu
     - [ ] Game over menu
     - [ ] Paused menu
+
+## Commands
+
+Sort imports:
+
+```shell
+dart run import_sorter:main
+```
+
+Format files:
+
+```shell
+dart format lib
+```
+
+Rebuild models:
+
+```shell
+dart run build_runner build --delete-conflicting-outputs
+```

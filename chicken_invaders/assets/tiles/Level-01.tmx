@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="40" height="22" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="45">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="40" height="22" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="54">
  <tileset firstgid="1" source="Chicken Invaders.tsx"/>
  <layer id="1" name="Background" width="40" height="22">
   <data encoding="csv">
@@ -38,6 +38,14 @@
   <object id="41" name="Enemy" type="Enemy" x="432" y="64" width="32" height="32"/>
   <object id="42" name="Enemy" type="Enemy" x="496" y="64" width="32" height="32"/>
   <object id="43" name="Enemy" type="Enemy" x="560" y="64" width="32" height="32"/>
+  <object id="45" name="Enemy" type="Enemy" x="80" y="128" width="32" height="32"/>
+  <object id="46" name="Enemy" type="Enemy" x="144" y="128" width="32" height="32"/>
+  <object id="47" name="Enemy" type="Enemy" x="208" y="128" width="32" height="32"/>
+  <object id="48" name="Enemy" type="Enemy" x="272" y="128" width="32" height="32"/>
+  <object id="49" name="Enemy" type="Enemy" x="336" y="128" width="32" height="32"/>
+  <object id="50" name="Enemy" type="Enemy" x="400" y="128" width="32" height="32"/>
+  <object id="51" name="Enemy" type="Enemy" x="464" y="128" width="32" height="32"/>
+  <object id="52" name="Enemy" type="Enemy" x="528" y="128" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="3" name="Collisions"/>
 </map>
