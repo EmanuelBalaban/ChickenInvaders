@@ -6,7 +6,8 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 
 import 'package:chicken_invaders/chicken_invaders.dart';
-import 'package:chicken_invaders/components/joystick.dart';
+import 'package:chicken_invaders/components/enemies/egg.dart';
+import 'package:chicken_invaders/components/hud/joystick.dart';
 import 'package:chicken_invaders/components/ship/ship_base.dart';
 import 'package:chicken_invaders/components/ship/ship_engine.dart';
 import 'package:chicken_invaders/components/ship/ship_engine_effect.dart';
@@ -244,6 +245,22 @@ class Ship extends PositionComponent
           _canMoveDown = false;
         }
       }
+    }
+
+    if (other is Egg) {
+      var health = settings.health - other.damage;
+
+      if (health <= 0) {
+        health = 0;
+        removeFromParent();
+
+        // TODO: trigger game over screen
+        // game.pauseEngine();
+      }
+
+      settings = settings.copyWith(
+        health: health,
+      );
     }
   }
 

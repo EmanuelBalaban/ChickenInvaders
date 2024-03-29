@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flame/components.dart';
 import 'package:flame_tiled/flame_tiled.dart';
 
-import 'package:chicken_invaders/components/blue_bird.dart';
+import 'package:chicken_invaders/components/enemies/blue_bird.dart';
 import 'package:chicken_invaders/components/ship/ship.dart';
 
 class Level extends World {

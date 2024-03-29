@@ -5,7 +5,7 @@ import 'dart:async';
 import 'package:flame/components.dart';
 
 import 'package:chicken_invaders/chicken_invaders.dart';
-import 'package:chicken_invaders/components/projectile.dart';
+import 'package:chicken_invaders/components/ship/projectile.dart';
 import 'package:chicken_invaders/mixins/debug_enum.dart';
 
 enum ShipWeaponType with DebugEnum {

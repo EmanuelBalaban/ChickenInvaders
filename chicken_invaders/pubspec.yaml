@@ -50,6 +50,7 @@ flutter:
     - assets/images/Main Ship/Main Ship - Weapons/
     - assets/images/Main ship weapons/
     - assets/images/Enemies/BlueBird/
+    - assets/images/Solid Eggs/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

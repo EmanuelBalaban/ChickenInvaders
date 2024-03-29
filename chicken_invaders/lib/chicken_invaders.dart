@@ -8,7 +8,7 @@ import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 
-import 'package:chicken_invaders/components/joystick.dart';
+import 'package:chicken_invaders/components/hud/joystick.dart';
 import 'package:chicken_invaders/components/level.dart';
 import 'package:chicken_invaders/components/ship/ship.dart';
 import 'package:chicken_invaders/components/ship/ship_engine.dart';

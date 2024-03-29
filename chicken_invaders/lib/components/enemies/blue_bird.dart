@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame/math.dart';
 
 import 'package:chicken_invaders/chicken_invaders.dart';
-import 'package:chicken_invaders/components/projectile.dart';
+import 'package:chicken_invaders/components/enemies/egg.dart';
+import 'package:chicken_invaders/components/ship/projectile.dart';
 import 'package:chicken_invaders/mixins/debug_enum.dart';
 
 enum BlueBirdState with DebugEnum {
@@ -19,7 +21,7 @@ enum BlueBirdState with DebugEnum {
 
 class BlueBird extends SpriteAnimationGroupComponent<BlueBirdState>
     with HasGameRef<ChickenInvaders>, CollisionCallbacks {
-  BlueBird({super.position}) {
+  BlueBird({super.position}) : super(priority: 1) {
     // debugMode = true;
   }
 
@@ -27,11 +29,13 @@ class BlueBird extends SpriteAnimationGroupComponent<BlueBirdState>
   static const _animationStepTime = 0.05; // 50 ms
   final double _hitAnimationTime =
       BlueBirdState.hit.sequenceAmount * _animationStepTime;
-  static const _moves = 300;
-  static const _speed = 10;
+  static const _moves = 350;
+  static const _speed = 10.0;
+  static const _eggFixedDt = 2.0;
 
   // Variables
-  double _accumulatedDt = 0;
+  double _eggAccumulatedDt = _eggFixedDt / 2;
+  double _hitAccumulatedDt = 0;
   double _health = 100;
   int _remainingMoves = _moves;
   bool _moveLeft = true;
@@ -67,12 +71,14 @@ class BlueBird extends SpriteAnimationGroupComponent<BlueBirdState>
     super.onCollisionStart(intersectionPoints, other);
 
     if (other is Projectile) {
+      // TODO: add sound effects
       current = BlueBirdState.hit;
-      _accumulatedDt = 0;
+      _hitAccumulatedDt = 0;
 
       _health -= other.current?.damage ?? 0;
 
       if (_health <= 0) {
+        // TODO: add sound effects
         removeFromParent();
       }
     }
@@ -81,9 +87,9 @@ class BlueBird extends SpriteAnimationGroupComponent<BlueBirdState>
   @override
   void update(double dt) {
     if (current == BlueBirdState.hit) {
-      _accumulatedDt += dt;
+      _hitAccumulatedDt += dt;
 
-      if (_accumulatedDt >= _hitAnimationTime) {
+      if (_hitAccumulatedDt >= _hitAnimationTime) {
         current = BlueBirdState.flying;
       }
     }
@@ -96,7 +102,27 @@ class BlueBird extends SpriteAnimationGroupComponent<BlueBirdState>
       _remainingMoves = _moves;
     }
 
+    _eggAccumulatedDt += dt;
+    if (_eggAccumulatedDt >= _eggFixedDt) {
+      _eggAccumulatedDt = 0;
+      _spawnEgg();
+    }
+
     super.update(dt);
+  }
+
+  void _spawnEgg() {
+    // 33.33% chance
+    if ((randomFallback.nextInt(100) % 3) != 0) {
+      return;
+    }
+
+    final egg = Egg();
+
+    game.world.add(egg);
+
+    egg.position = absolutePositionOfAnchor(Anchor.bottomCenter) +
+        Vector2(egg.scaledSize.x / 2, -egg.scaledSize.y);
   }
 
   SpriteAnimation _createAnimation({
