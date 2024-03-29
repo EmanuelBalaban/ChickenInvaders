@@ -8,13 +8,12 @@ import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 
+import 'package:chicken_invaders/components/joystick.dart';
 import 'package:chicken_invaders/components/level.dart';
 import 'package:chicken_invaders/components/ship/ship.dart';
 import 'package:chicken_invaders/components/ship/ship_engine.dart';
 import 'package:chicken_invaders/components/ship/ship_settings.dart';
 import 'package:chicken_invaders/components/ship/ship_weapon.dart';
-import 'package:chicken_invaders/old_components/joystick.dart';
-import 'package:chicken_invaders/old_components/player.dart';
 import 'package:chicken_invaders/utils/platform.dart';
 
 class ChickenInvaders extends FlameGame
@@ -22,7 +21,6 @@ class ChickenInvaders extends FlameGame
   @override
   Color backgroundColor() => const Color(0xFF211F30);
 
-  late final Player player;
   late final Ship ship;
 
   Joystick? joystick;
@@ -36,11 +34,6 @@ class ChickenInvaders extends FlameGame
     if (showJoystick) {
       await addJoystick();
     }
-
-    player = Player(
-      character: 'Mask Dude',
-      joystick: joystick,
-    );
 
     ship = Ship(
       settings: const ShipSettings(

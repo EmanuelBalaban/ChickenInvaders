@@ -6,12 +6,12 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 
 import 'package:chicken_invaders/chicken_invaders.dart';
+import 'package:chicken_invaders/components/joystick.dart';
 import 'package:chicken_invaders/components/ship/ship_base.dart';
 import 'package:chicken_invaders/components/ship/ship_engine.dart';
 import 'package:chicken_invaders/components/ship/ship_engine_effect.dart';
 import 'package:chicken_invaders/components/ship/ship_settings.dart';
 import 'package:chicken_invaders/components/ship/ship_weapon.dart';
-import 'package:chicken_invaders/old_components/joystick.dart';
 
 class Ship extends PositionComponent
     with HasGameRef<ChickenInvaders>, KeyboardHandler, CollisionCallbacks {
