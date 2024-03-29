@@ -70,6 +70,7 @@ class ShipWeapon extends SpriteAnimationGroupComponent<ShipWeaponType>
       final projectile = Projectile(current: current?.projectileType);
       game.world.add(projectile);
       projectile.position = position;
+      projectile.priority = -1;
     }
 
     switch (current) {
@@ -132,6 +133,10 @@ class ShipWeapon extends SpriteAnimationGroupComponent<ShipWeaponType>
         );
 
         break;
+      case ShipWeaponType.zapper:
+        spawnProjectile(
+          absolutePositionOfAnchor(Anchor.topCenter) + Vector2(-32, 2),
+        );
       default:
     }
   }

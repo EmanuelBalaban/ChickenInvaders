@@ -42,6 +42,7 @@ enum ProjectileType {
         ProjectileType.autoCannonBullet: Vector2(0.4, 0.4),
         ProjectileType.bigSpaceGun: Vector2(0.6, 0.6),
         ProjectileType.rocket: Vector2(1.0, 1.0),
+        ProjectileType.zapper: Vector2(2.0, 1.0),
       }[this]!;
 }
 
