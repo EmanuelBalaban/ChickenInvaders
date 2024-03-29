@@ -3,23 +3,27 @@ import 'dart:async';
 import 'package:flame/components.dart';
 import 'package:flame_tiled/flame_tiled.dart';
 
+import 'package:chicken_invaders/components/blue_bird.dart';
 import 'package:chicken_invaders/components/ship.dart';
-import 'package:chicken_invaders/old_components/collision_block.dart';
-import 'package:chicken_invaders/old_components/player.dart';
 
 class Level extends World {
   Level({
     required this.name,
-    required this.player,
     required this.ship,
   });
 
   final String name;
-  final Player player;
   final Ship ship;
 
   late TiledComponent level;
-  List<CollisionBlock> collisionBlocks = [];
+
+  // Constants
+  static const _respawnTime = 1.0;
+
+  // Variables
+  final _enemySpawnPoints = List<Vector2>.empty(growable: true);
+  int _enemiesCount = 0;
+  double _accumulatedDt = 0;
 
   @override
   FutureOr<void> onLoad() async {
@@ -29,47 +33,65 @@ class Level extends World {
 
     final spawnPointLayer = level.tileMap.getLayer<ObjectGroup>('SpawnPoints');
 
-    for (final spawnPoint in spawnPointLayer?.objects ?? []) {
-      if (spawnPoint is! TiledObject) {
+    for (final tiledObj in spawnPointLayer?.objects ?? []) {
+      if (tiledObj is! TiledObject) {
         continue;
       }
 
-      switch (spawnPoint.type) {
-        case 'Player':
-          player.position = Vector2(spawnPoint.x, spawnPoint.y);
-          // add(player);
-          break;
+      final spawnPoint = Vector2(tiledObj.x, tiledObj.y);
+
+      switch (tiledObj.type) {
         case 'Ship':
-          ship.position = Vector2(spawnPoint.x, spawnPoint.y);
+          ship.position = spawnPoint;
           add(ship);
           break;
+        case 'Enemy':
+          final enemy = BlueBird(position: spawnPoint);
+
+          _enemySpawnPoints.add(spawnPoint);
+
+          add(enemy);
+          break;
       }
     }
 
-    final collisionsLayer = level.tileMap.getLayer<ObjectGroup>('Collisions');
-
-    for (final collision in collisionsLayer?.objects ?? []) {
-      if (collision is! TiledObject) {
-        continue;
-      }
-
-      final block = CollisionBlock(
-        position: Vector2(collision.x, collision.y),
-        size: Vector2(collision.width, collision.height),
-      );
-
-      // switch (collision.type) {
-      //   case 'Platform':
-      //     break;
-      //   default:
-      // }
-
-      collisionBlocks.add(block);
-      add(block);
-    }
-
-    player.collisionBlocks = collisionBlocks;
+    _enemiesCount = _enemySpawnPoints.length;
 
     return super.onLoad();
+  }
+
+  @override
+  void onChildrenChanged(Component child, ChildrenChangeType type) {
+    super.onChildrenChanged(child, type);
+
+    if (type == ChildrenChangeType.removed && child is BlueBird) {
+      _enemiesCount--;
+
+      if (_enemiesCount == 0) {
+        _accumulatedDt = 0;
+      }
+    }
+  }
+
+  @override
+  void update(double dt) {
+    if (_enemiesCount == 0) {
+      _accumulatedDt += dt;
+
+      if (_accumulatedDt > _respawnTime) {
+        _addEnemies();
+      }
+    }
+
+    super.update(dt);
+  }
+
+  void _addEnemies() {
+    addAll(
+      _enemySpawnPoints.map(
+        (spawnPoint) => BlueBird(position: spawnPoint),
+      ),
+    );
+    _enemiesCount = _enemySpawnPoints.length;
   }
 }

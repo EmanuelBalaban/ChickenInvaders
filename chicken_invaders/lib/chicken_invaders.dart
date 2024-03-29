@@ -43,7 +43,6 @@ class ChickenInvaders extends FlameGame
 
     world = Level(
       name: 'Level-01',
-      player: player,
       ship: ship,
     );
 

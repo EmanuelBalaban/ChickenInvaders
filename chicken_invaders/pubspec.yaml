@@ -39,6 +39,8 @@ flutter:
     - assets/images/Main Characters/Virtual Guy/
     - assets/images/HUD/
     - assets/images/Main Ship/Main Ship - Bases/
+    - assets/images/Main ship weapons/
+    - assets/images/Enemies/BlueBird/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

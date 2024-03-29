@@ -6,6 +6,7 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 
 import 'package:chicken_invaders/chicken_invaders.dart';
+import 'package:chicken_invaders/components/bullet.dart';
 import 'package:chicken_invaders/mixins/debug_enum.dart';
 
 enum ShipHealthState with DebugEnum {
@@ -17,18 +18,6 @@ enum ShipHealthState with DebugEnum {
   const ShipHealthState(this.assetName);
 
   final String assetName;
-}
-
-enum ShipEngineState with DebugEnum {
-  idle,
-  powering;
-}
-
-enum ShipEngineType with DebugEnum {
-  base,
-  burst,
-  bigPulse,
-  supercharged;
 }
 
 enum ShipShieldType with DebugEnum {
@@ -58,8 +47,12 @@ class Ship extends SpriteGroupComponent<ShipHealthState>
   static const _verticalDeceleration = 0.01;
   static const _horizontalTerminalVelocity = 300.0;
   static const _verticalTerminalVelocity = 150.0;
+  static const _bulletCoolDownDt = 0.1;
 
   // Variables
+  bool _spaceDown = false;
+  double _bulletAccumulatedDt = 0;
+
   Vector2 _movement = Vector2.zero();
   final _velocity = Vector2.zero();
 
@@ -81,18 +74,26 @@ class Ship extends SpriteGroupComponent<ShipHealthState>
 
     current = ShipHealthState.fullHealth;
 
-    add(
-      RectangleHitbox.relative(
-        Vector2.all(0.6),
-        parentSize: size,
-      ),
+    final hitbox = RectangleHitbox.relative(
+      Vector2.all(0.6),
+      parentSize: size,
     );
+
+    add(hitbox);
 
     return super.onLoad();
   }
 
   @override
   void update(double dt) {
+    _bulletAccumulatedDt += dt;
+    if (_spaceDown) {
+      if (_bulletAccumulatedDt >= _bulletCoolDownDt) {
+        _bulletAccumulatedDt = 0;
+        _fireBullet();
+      }
+    }
+
     // Calculate horizontal velocity
     if (_movement.x != 0) {
       _velocity.x += _movement.x * _horizontalSpeed;
@@ -140,6 +141,11 @@ class Ship extends SpriteGroupComponent<ShipHealthState>
   bool onKeyEvent(RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
     _movement = Vector2.zero();
 
+    // Fire projectile
+    if (event.logicalKey == LogicalKeyboardKey.space) {
+      _spaceDown = event is RawKeyDownEvent;
+    }
+
     for (final keyPressed in keysPressed) {
       if (keyPressed == LogicalKeyboardKey.arrowLeft ||
           keyPressed == LogicalKeyboardKey.keyA) {
@@ -175,20 +181,21 @@ class Ship extends SpriteGroupComponent<ShipHealthState>
     _allowAllMovement();
 
     if (other is ScreenHitbox) {
+      // Inside collisions
       for (final point in intersectionPoints) {
-        if (point.x == 0) {
+        if (point.x <= other.x) {
           _canMoveLeft = false;
         }
 
-        if (point.x == game.size.x) {
+        if (point.x >= other.x + other.width) {
           _canMoveRight = false;
         }
 
-        if (point.y == 0) {
+        if (point.y <= other.y) {
           _canMoveUp = false;
         }
 
-        if (point.y == game.size.y) {
+        if (point.y >= other.y + other.height) {
           _canMoveDown = false;
         }
       }
@@ -207,6 +214,16 @@ class Ship extends SpriteGroupComponent<ShipHealthState>
     _canMoveRight = true;
     _canMoveUp = true;
     _canMoveDown = true;
+  }
+
+  void _fireBullet() {
+    final bullet = Bullet();
+
+    game.world.add(bullet);
+
+    final position = positionOfAnchor(Anchor.topCenter) - bullet.size / 2;
+
+    bullet.position = position;
   }
 
   Sprite _createSprite({

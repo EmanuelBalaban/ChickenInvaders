@@ -11,15 +11,15 @@
     "fileStates": {
         "Chicken Invaders.tsx": {
             "dynamicWrapping": false,
-            "scaleInDock": 1,
+            "scaleInDock": 1.5,
             "scaleInEditor": 1
         },
         "Level-01.tmx": {
-            "scale": 2,
-            "selectedLayer": 1,
+            "scale": 3,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 273.5,
-                "y": 191
+                "x": 274.3333333333333,
+                "y": 221.66666666666669
             }
         },
         "Test.tsx": {
