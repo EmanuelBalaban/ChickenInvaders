@@ -46,7 +46,7 @@ class ChickenInvaders extends FlameGame
       settings: const ShipSettings(
         health: 100,
         engine: ShipEngineType.base,
-        weapon: ShipWeaponType.autoCannon,
+        weapon: ShipWeaponType.rockets,
       ),
       joystick: joystick,
     );

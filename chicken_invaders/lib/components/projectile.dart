@@ -37,6 +37,12 @@ enum ProjectileType {
   final String assetName;
   final int sequenceAmount;
   final double damage;
+
+  Vector2 get scale => {
+        ProjectileType.autoCannonBullet: Vector2(0.4, 0.4),
+        ProjectileType.bigSpaceGun: Vector2(0.6, 0.6),
+        ProjectileType.rocket: Vector2(1.0, 1.0),
+      }[this]!;
 }
 
 class Projectile extends SpriteAnimationGroupComponent<ProjectileType>
@@ -70,7 +76,7 @@ class Projectile extends SpriteAnimationGroupComponent<ProjectileType>
       ),
     );
 
-    scale = Vector2(0.6, 0.6);
+    scale = current?.scale ?? Vector2(1.0, 1.0);
 
     return super.onLoad();
   }
@@ -89,7 +95,7 @@ class Projectile extends SpriteAnimationGroupComponent<ProjectileType>
   ) {
     super.onCollisionStart(intersectionPoints, other);
 
-    if (other is! Ship) {
+    if (other is! Ship && other is! Projectile) {
       removeFromParent();
     }
   }

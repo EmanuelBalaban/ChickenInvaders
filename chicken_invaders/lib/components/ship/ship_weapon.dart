@@ -75,16 +75,62 @@ class ShipWeapon extends SpriteAnimationGroupComponent<ShipWeaponType>
     switch (current) {
       case ShipWeaponType.autoCannon:
         spawnProjectile(
-          absolutePositionOfAnchor(Anchor.topLeft) + Vector2(5, 2),
+          absolutePositionOfAnchor(Anchor.topLeft) + Vector2(8, 2),
         );
-        spawnProjectile(
-          absolutePositionOfAnchor(Anchor.topRight) + Vector2(-25, 2),
+
+        Future.delayed(
+          const Duration(
+            milliseconds: 20,
+          ),
+          () => spawnProjectile(
+            absolutePositionOfAnchor(Anchor.topRight) + Vector2(-21, 2),
+          ),
         );
         break;
       case ShipWeaponType.bigSpaceGun:
         spawnProjectile(
           absolutePositionOfAnchor(Anchor.topCenter) + Vector2(-10, 2),
         );
+        break;
+      case ShipWeaponType.rockets:
+        // 1st row
+        spawnProjectile(
+          absolutePositionOfAnchor(Anchor.topLeft) + Vector2(2, 7.0),
+        );
+        spawnProjectile(
+          absolutePositionOfAnchor(Anchor.topLeft) + Vector2(15, 7.0),
+        );
+
+        // 2nd row
+        Future.delayed(
+          const Duration(
+            milliseconds: 200,
+          ),
+          () {
+            spawnProjectile(
+              absolutePositionOfAnchor(Anchor.topLeft) + Vector2(-2, 11.5),
+            );
+            spawnProjectile(
+              absolutePositionOfAnchor(Anchor.topLeft) + Vector2(19, 11.5),
+            );
+          },
+        );
+
+        // 3rd row
+        Future.delayed(
+          const Duration(
+            milliseconds: 400,
+          ),
+          () {
+            spawnProjectile(
+              absolutePositionOfAnchor(Anchor.topLeft) + Vector2(-6.5, 15),
+            );
+            spawnProjectile(
+              absolutePositionOfAnchor(Anchor.topLeft) + Vector2(23.5, 15),
+            );
+          },
+        );
+
         break;
       default:
     }
