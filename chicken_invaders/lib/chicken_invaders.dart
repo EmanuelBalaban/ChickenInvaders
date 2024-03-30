@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 
 import 'package:flame/camera.dart';
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
@@ -17,7 +18,10 @@ import 'package:chicken_invaders/components/ship/ship_weapon.dart';
 import 'package:chicken_invaders/utils/platform.dart';
 
 class ChickenInvaders extends FlameGame
-    with HasKeyboardHandlerComponents, DragCallbacks, HasCollisionDetection {
+    with
+        HasKeyboardHandlerComponents,
+        DragCallbacks,
+        HasQuadTreeCollisionDetection {
   @override
   Color backgroundColor() => const Color(0xFF211F30);
 
@@ -30,6 +34,8 @@ class ChickenInvaders extends FlameGame
   bool playSounds = true;
   double soundVolume = 1.0;
 
+  bool showFPS = true;
+
   @override
   FutureOr<void> onLoad() async {
     // Menu song: 2001.wav
@@ -37,7 +43,7 @@ class ChickenInvaders extends FlameGame
     await images.loadAllImages();
 
     if (showJoystick) {
-      await addJoystick();
+      await _addJoystick();
     }
 
     ship = Ship(
@@ -65,10 +71,36 @@ class ChickenInvaders extends FlameGame
 
     await world.add(ScreenHitbox());
 
+    if (showFPS) {
+      await camera.viewport.add(FpsTextComponent());
+    }
+
+    initializeCollisionDetection(
+      mapDimensions: Rect.fromLTWH(0, 0, size.x, size.y),
+    );
+
     return super.onLoad();
   }
 
-  Future<void> addJoystick() async {
+  @override
+  void lifecycleStateChange(AppLifecycleState state) {
+    super.lifecycleStateChange(state);
+
+    if ([
+      AppLifecycleState.inactive,
+      AppLifecycleState.detached,
+      AppLifecycleState.hidden,
+      AppLifecycleState.paused,
+    ].contains(state)) {
+      onGameIdle();
+    }
+  }
+
+  void onGameIdle() {
+    collisionDetection.broadphase.tree.optimize();
+  }
+
+  Future<void> _addJoystick() async {
     joystick = Joystick(
       knob: SpriteComponent.fromImage(
         images.fromCache('HUD/Knob.png'),
