@@ -43,7 +43,7 @@ class Egg extends SpriteComponent
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     if (other is! BlueBird && other is! Egg) {
       if (game.playSounds && other is! Ship) {
-        FlameAudio.play('fx11.wav', volume: game.soundVolume);
+        FlameAudio.play('fx11.wav', volume: game.soundVolume * 0.6);
       }
 
       removeFromParent();

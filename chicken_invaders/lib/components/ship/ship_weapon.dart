@@ -74,7 +74,7 @@ class ShipWeapon extends SpriteAnimationGroupComponent<ShipWeaponType>
   void fire() {
     if (game.playSounds) {
       // cannonfire.wav
-      FlameAudio.play('tr3_239.wav', volume: game.soundVolume);
+      FlameAudio.play('tr3_239.wav', volume: game.soundVolume * 1.5);
     }
 
     animationTicker?.reset();

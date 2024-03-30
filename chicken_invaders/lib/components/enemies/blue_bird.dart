@@ -123,7 +123,7 @@ class BlueBird extends SpriteAnimationGroupComponent<BlueBirdState>
     }
 
     if (game.playSounds) {
-      FlameAudio.play('fx110.wav', volume: game.soundVolume);
+      FlameAudio.play('fx110.wav', volume: game.soundVolume * 0.6);
     }
 
     final egg = Egg();
