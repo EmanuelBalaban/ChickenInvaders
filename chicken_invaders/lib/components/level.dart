@@ -1,12 +1,14 @@
 import 'dart:async';
 
 import 'package:flame/components.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flame_tiled/flame_tiled.dart';
 
+import 'package:chicken_invaders/chicken_invaders.dart';
 import 'package:chicken_invaders/components/enemies/blue_bird.dart';
 import 'package:chicken_invaders/components/ship/ship.dart';
 
-class Level extends World {
+class Level extends World with HasGameRef<ChickenInvaders> {
   Level({
     required this.name,
     required this.ship,
@@ -27,6 +29,10 @@ class Level extends World {
 
   @override
   FutureOr<void> onLoad() async {
+    if (game.playSounds) {
+      FlameAudio.play('fanfar1.wav', volume: game.soundVolume);
+    }
+
     level = await TiledComponent.load('$name.tmx', Vector2.all(16));
 
     add(level);

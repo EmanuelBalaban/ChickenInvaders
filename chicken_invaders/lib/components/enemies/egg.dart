@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame_audio/flame_audio.dart';
 
 import 'package:chicken_invaders/chicken_invaders.dart';
 import 'package:chicken_invaders/components/enemies/blue_bird.dart';
+import 'package:chicken_invaders/components/ship/ship.dart';
 
 class Egg extends SpriteComponent
     with HasGameRef<ChickenInvaders>, CollisionCallbacks {
@@ -23,7 +25,7 @@ class Egg extends SpriteComponent
       game.images.fromCache('Solid Eggs/White.png'),
     );
 
-    scale = Vector2(0.13, 0.13);
+    scale = Vector2(0.15, 0.15);
 
     await add(RectangleHitbox());
 
@@ -40,6 +42,10 @@ class Egg extends SpriteComponent
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     if (other is! BlueBird && other is! Egg) {
+      if (game.playSounds && other is! Ship) {
+        FlameAudio.play('fx11.wav', volume: game.soundVolume);
+      }
+
       removeFromParent();
     }
 

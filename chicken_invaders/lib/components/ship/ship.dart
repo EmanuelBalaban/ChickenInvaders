@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame_audio/flame_audio.dart';
 
 import 'package:chicken_invaders/chicken_invaders.dart';
 import 'package:chicken_invaders/components/enemies/egg.dart';
@@ -247,20 +248,9 @@ class Ship extends PositionComponent
       }
     }
 
+    // Eat chicken wing: chomp.wav
     if (other is Egg) {
-      var health = settings.health - other.damage;
-
-      if (health <= 0) {
-        health = 0;
-        removeFromParent();
-
-        // TODO: trigger game over screen
-        // game.pauseEngine();
-      }
-
-      settings = settings.copyWith(
-        health: health,
-      );
+      _eggHit(other.damage);
     }
   }
 
@@ -303,6 +293,29 @@ class Ship extends PositionComponent
 
     settings = settings.copyWith(
       weapon: ShipWeaponType.values[nextWeaponIndex],
+    );
+  }
+
+  void _eggHit(double damage) {
+    var health = settings.health - damage;
+
+    if (game.playSounds) {
+      FlameAudio.play(
+        health <= 0 ? 'bonewah.wav' : 'fx113.wav',
+        volume: game.soundVolume,
+      );
+    }
+
+    if (health <= 0) {
+      health = 0;
+      removeFromParent();
+
+      // TODO: trigger game over screen
+      // game.pauseEngine();
+    }
+
+    settings = settings.copyWith(
+      health: health,
     );
   }
 }

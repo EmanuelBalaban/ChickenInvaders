@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/math.dart';
+import 'package:flame_audio/flame_audio.dart';
 
 import 'package:chicken_invaders/chicken_invaders.dart';
 import 'package:chicken_invaders/components/enemies/egg.dart';
@@ -34,7 +35,7 @@ class BlueBird extends SpriteAnimationGroupComponent<BlueBirdState>
   static const _eggFixedDt = 2.0;
 
   // Variables
-  double _eggAccumulatedDt = _eggFixedDt / 2;
+  double _eggAccumulatedDt = 0;
   double _hitAccumulatedDt = 0;
   double _health = 100;
   int _remainingMoves = _moves;
@@ -71,7 +72,10 @@ class BlueBird extends SpriteAnimationGroupComponent<BlueBirdState>
     super.onCollisionStart(intersectionPoints, other);
 
     if (other is Projectile) {
-      // TODO: add sound effects
+      if (game.playSounds) {
+        FlameAudio.play('rdfx31.wav', volume: game.soundVolume);
+      }
+
       current = BlueBirdState.hit;
       _hitAccumulatedDt = 0;
 
@@ -79,6 +83,7 @@ class BlueBird extends SpriteAnimationGroupComponent<BlueBirdState>
 
       if (_health <= 0) {
         // TODO: add sound effects
+        // TODO: drop chicken
         removeFromParent();
       }
     }
@@ -113,8 +118,12 @@ class BlueBird extends SpriteAnimationGroupComponent<BlueBirdState>
 
   void _spawnEgg() {
     // 33.33% chance
-    if ((randomFallback.nextInt(100) % 3) != 0) {
+    if ((randomFallback.nextInt(100) % 10) != 0) {
       return;
+    }
+
+    if (game.playSounds) {
+      FlameAudio.play('fx110.wav', volume: game.soundVolume);
     }
 
     final egg = Egg();

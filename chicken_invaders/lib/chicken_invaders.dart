@@ -27,8 +27,13 @@ class ChickenInvaders extends FlameGame
 
   bool showJoystick = Platform.current().isMobile;
 
+  bool playSounds = true;
+  double soundVolume = 1.0;
+
   @override
   FutureOr<void> onLoad() async {
+    // Menu song: 2001.wav
+
     await images.loadAllImages();
 
     if (showJoystick) {

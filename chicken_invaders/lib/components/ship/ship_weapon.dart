@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:flame/components.dart';
+import 'package:flame_audio/flame_audio.dart';
 
 import 'package:chicken_invaders/chicken_invaders.dart';
 import 'package:chicken_invaders/components/ship/projectile.dart';
@@ -71,6 +72,11 @@ class ShipWeapon extends SpriteAnimationGroupComponent<ShipWeaponType>
   }
 
   void fire() {
+    if (game.playSounds) {
+      // cannonfire.wav
+      FlameAudio.play('tr3_239.wav', volume: game.soundVolume);
+    }
+
     animationTicker?.reset();
 
     void spawnProjectile(Vector2 position) {
