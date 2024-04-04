@@ -117,7 +117,7 @@ class BlueBird extends SpriteAnimationGroupComponent<BlueBirdState>
   }
 
   void _spawnEgg() {
-    // 33.33% chance
+    // 10% chance
     if ((randomFallback.nextInt(100) % 10) != 0) {
       return;
     }

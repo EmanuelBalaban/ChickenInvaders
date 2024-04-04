@@ -6,7 +6,7 @@ import 'package:flame/game.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'package:chicken_invaders/chicken_invaders.dart';
-import 'package:chicken_invaders/utils/platform.dart';
+import 'package:chicken_invaders/models/platform.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -15,7 +15,7 @@ import 'package:chicken_invaders/components/ship/ship.dart';
 import 'package:chicken_invaders/components/ship/ship_engine.dart';
 import 'package:chicken_invaders/components/ship/ship_settings.dart';
 import 'package:chicken_invaders/components/ship/ship_weapon.dart';
-import 'package:chicken_invaders/utils/platform.dart';
+import 'package:chicken_invaders/models/app_layout.dart';
 
 class ChickenInvaders extends FlameGame
     with
@@ -29,10 +29,12 @@ class ChickenInvaders extends FlameGame
 
   Joystick? joystick;
 
-  bool showJoystick = Platform.current().isMobile;
+  final _appLayout = AppLayout.current();
+  late bool showJoystick =
+      _appLayout == AppLayout.mobile || _appLayout == AppLayout.tablet;
 
   bool playSounds = true;
-  double soundVolume = 1.0;
+  double soundVolume = 0.4;
 
   bool showFPS = true;
 
