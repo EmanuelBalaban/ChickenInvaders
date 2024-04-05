@@ -1,0 +1,13 @@
+{
+    "yaml.schemas": {
+        "https://json.schemastore.org/github-workflow.json": [
+            "*.github/workflows/*.yaml",
+            "*.github/workflows/*.yml",
+            "vscode-vfs://github/EmanuelBalaban/ChickenInvaders/.github/workflows/build-and-deploy.yaml"
+        ],
+        "https://json.schemastore.org/github-action.json": [
+            "action.yaml",
+            "action.yml"
+        ]
+    }
+}
