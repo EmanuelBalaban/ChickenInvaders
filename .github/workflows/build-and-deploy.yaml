@@ -28,7 +28,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: website
-          path: build/web
+          path: ./chicken_invaders/build/web
   
   release:
     name: Deploy to GitHub Pages
