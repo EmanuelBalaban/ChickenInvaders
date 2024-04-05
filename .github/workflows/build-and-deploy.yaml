@@ -20,9 +20,14 @@ jobs:
         working-directory: ./chicken_invaders
         run: flutter pub get
 
+      - name: 'Display GitHub Context'
+        run: echo ${{ toJson(github) }}
+
       - name: 'Build for Web'
         working-directory: ./chicken_invaders
-        run: flutter build web --release
+        env:
+          REPOSITORY_NAME: ${{ github.event.repository.name }}
+        run: flutter build web --release --base-href /$REPOSITORY_NAME/
 
       - name: 'Create artifact directory'
         working-directory: ./chicken_invaders/build
