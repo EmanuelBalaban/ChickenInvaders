@@ -179,17 +179,16 @@ class Ship extends PositionComponent
   }
 
   @override
-  bool onKeyEvent(RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
+  bool onKeyEvent(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
     _movement = Vector2.zero();
 
     // Fire projectile
     if (event.logicalKey == LogicalKeyboardKey.space) {
-      _spaceDown = event is RawKeyDownEvent;
+      _spaceDown = event is KeyDownEvent;
     }
 
     // Switch weapon
-    if (event.logicalKey == LogicalKeyboardKey.enter &&
-        event is RawKeyUpEvent) {
+    if (event.logicalKey == LogicalKeyboardKey.enter && event is KeyUpEvent) {
       _switchWeapon();
     }
 
