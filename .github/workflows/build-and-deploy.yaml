@@ -21,7 +21,9 @@ jobs:
         run: flutter pub get
 
       - name: 'Display GitHub Context'
-        run: echo ${{ toJson(github) }}
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
 
       - name: 'Build for Web'
         working-directory: ./chicken_invaders
