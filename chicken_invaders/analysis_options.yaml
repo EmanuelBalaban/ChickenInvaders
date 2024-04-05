@@ -7,4 +7,5 @@ analyzer:
 linter:
   rules:
     directives_ordering: false
+    flutter_style_todos: false
     sort_pub_dependencies: false

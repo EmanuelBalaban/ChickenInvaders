@@ -14,6 +14,8 @@ import 'package:chicken_invaders/components/ship/ship_engine.dart';
 import 'package:chicken_invaders/components/ship/ship_engine_effect.dart';
 import 'package:chicken_invaders/components/ship/ship_settings.dart';
 import 'package:chicken_invaders/components/ship/ship_weapon.dart';
+import 'package:chicken_invaders/utils/assets.dart';
+import 'package:chicken_invaders/utils/constants.dart';
 
 class Ship extends PositionComponent
     with HasGameRef<ChickenInvaders>, KeyboardHandler, CollisionCallbacks {
@@ -298,14 +300,18 @@ class Ship extends PositionComponent
   void _eggHit(double damage) {
     var health = settings.health - damage;
 
+    final gameOver = health <= 0;
+
     if (game.playSounds) {
       FlameAudio.play(
-        health <= 0 ? 'bonewah.wav' : 'fx113.wav',
-        volume: game.soundVolume,
+        gameOver ? Assets.audio.gameOver : Assets.audio.shipHit,
+        volume: gameOver
+            ? Constants.sound.gameOverVolume
+            : Constants.sound.shipHitVolume,
       );
     }
 
-    if (health <= 0) {
+    if (gameOver) {
       health = 0;
       removeFromParent();
 

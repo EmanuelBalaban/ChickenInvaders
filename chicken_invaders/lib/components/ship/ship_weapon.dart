@@ -8,6 +8,8 @@ import 'package:flame_audio/flame_audio.dart';
 import 'package:chicken_invaders/chicken_invaders.dart';
 import 'package:chicken_invaders/components/ship/projectile.dart';
 import 'package:chicken_invaders/mixins/debug_enum.dart';
+import 'package:chicken_invaders/utils/assets.dart';
+import 'package:chicken_invaders/utils/constants.dart';
 
 enum ShipWeaponType with DebugEnum {
   autoCannon(
@@ -73,8 +75,10 @@ class ShipWeapon extends SpriteAnimationGroupComponent<ShipWeaponType>
 
   void fire() {
     if (game.playSounds) {
-      // cannonfire.wav
-      FlameAudio.play('tr3_239.wav', volume: game.soundVolume * 1.5);
+      FlameAudio.play(
+        Assets.audio.fireProjectile,
+        volume: Constants.sound.fireProjectileVolume,
+      );
     }
 
     animationTicker?.reset();

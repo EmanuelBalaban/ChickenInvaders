@@ -1,3 +1,5 @@
+// ignore_for_file: comment_references
+
 import 'package:flutter/services.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';

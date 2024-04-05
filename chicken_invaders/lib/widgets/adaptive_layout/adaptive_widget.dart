@@ -1,4 +1,4 @@
-// ignore_for_file: avoid-returning-widgets
+// ignore_for_file: avoid-returning-widgets, comment_references
 
 import 'package:flutter/material.dart';
 

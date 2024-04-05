@@ -34,8 +34,6 @@ class ChickenInvaders extends FlameGame
       _appLayout == AppLayout.mobile || _appLayout == AppLayout.tablet;
 
   bool playSounds = true;
-  double soundVolume = 1.0;
-
   bool showFPS = true;
 
   @override
