@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flame_audio/flame_audio.dart';
 
 import 'package:chicken_invaders/chicken_invaders.dart';
 import 'package:chicken_invaders/components/enemies/blue_bird.dart';
 import 'package:chicken_invaders/components/ship/ship.dart';
 import 'package:chicken_invaders/utils/assets.dart';
+import 'package:chicken_invaders/utils/audio_player.dart';
 import 'package:chicken_invaders/utils/constants.dart';
 
 class Egg extends SpriteComponent
@@ -45,7 +45,7 @@ class Egg extends SpriteComponent
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     if (other is! BlueBird && other is! Egg) {
       if (game.playSounds && other is! Ship) {
-        FlameAudio.play(
+        AudioPlayer.play(
           Assets.audio.eggDestroy,
           volume: Constants.sound.eggDestroyVolume,
         );

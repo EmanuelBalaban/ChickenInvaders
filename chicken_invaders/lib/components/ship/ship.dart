@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flame_audio/flame_audio.dart';
 
 import 'package:chicken_invaders/chicken_invaders.dart';
 import 'package:chicken_invaders/components/enemies/egg.dart';
@@ -15,6 +14,7 @@ import 'package:chicken_invaders/components/ship/ship_engine_effect.dart';
 import 'package:chicken_invaders/components/ship/ship_settings.dart';
 import 'package:chicken_invaders/components/ship/ship_weapon.dart';
 import 'package:chicken_invaders/utils/assets.dart';
+import 'package:chicken_invaders/utils/audio_player.dart';
 import 'package:chicken_invaders/utils/constants.dart';
 
 class Ship extends PositionComponent
@@ -303,7 +303,7 @@ class Ship extends PositionComponent
     final gameOver = health <= 0;
 
     if (game.playSounds) {
-      FlameAudio.play(
+      AudioPlayer.play(
         gameOver ? Assets.audio.gameOver : Assets.audio.shipHit,
         volume: gameOver
             ? Constants.sound.gameOverVolume

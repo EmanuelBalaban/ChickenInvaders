@@ -21,6 +21,9 @@ dependencies:
   freezed_annotation: ^2.4.1
   json_annotation: ^4.8.1
   flutter_bloc: ^8.1.5
+  just_audio: ^0.9.37
+  just_audio_windows: ^0.2.0
+  just_audio_mpv: ^0.1.7
 
 dev_dependencies:
   flutter_test:

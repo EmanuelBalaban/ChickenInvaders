@@ -3,12 +3,12 @@
 import 'dart:async';
 
 import 'package:flame/components.dart';
-import 'package:flame_audio/flame_audio.dart';
 
 import 'package:chicken_invaders/chicken_invaders.dart';
 import 'package:chicken_invaders/components/ship/projectile.dart';
 import 'package:chicken_invaders/mixins/debug_enum.dart';
 import 'package:chicken_invaders/utils/assets.dart';
+import 'package:chicken_invaders/utils/audio_player.dart';
 import 'package:chicken_invaders/utils/constants.dart';
 
 enum ShipWeaponType with DebugEnum {
@@ -75,7 +75,7 @@ class ShipWeapon extends SpriteAnimationGroupComponent<ShipWeaponType>
 
   void fire() {
     if (game.playSounds) {
-      FlameAudio.play(
+      AudioPlayer.play(
         Assets.audio.fireProjectile,
         volume: Constants.sound.fireProjectileVolume,
       );

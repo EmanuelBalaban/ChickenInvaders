@@ -3,13 +3,13 @@ import 'dart:async';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/math.dart';
-import 'package:flame_audio/flame_audio.dart';
 
 import 'package:chicken_invaders/chicken_invaders.dart';
 import 'package:chicken_invaders/components/enemies/egg.dart';
 import 'package:chicken_invaders/components/ship/projectile.dart';
 import 'package:chicken_invaders/mixins/debug_enum.dart';
 import 'package:chicken_invaders/utils/assets.dart';
+import 'package:chicken_invaders/utils/audio_player.dart';
 import 'package:chicken_invaders/utils/constants.dart';
 
 enum BlueBirdState with DebugEnum {
@@ -75,7 +75,7 @@ class BlueBird extends SpriteAnimationGroupComponent<BlueBirdState>
 
     if (other is Projectile) {
       if (game.playSounds) {
-        FlameAudio.play(
+        AudioPlayer.play(
           Assets.audio.birdHit,
           volume: Constants.sound.birdHitVolume,
         );
@@ -128,7 +128,7 @@ class BlueBird extends SpriteAnimationGroupComponent<BlueBirdState>
     }
 
     if (game.playSounds) {
-      FlameAudio.play(
+      AudioPlayer.play(
         Assets.audio.eggSpawn,
         volume: Constants.sound.eggSpawnVolume,
       );

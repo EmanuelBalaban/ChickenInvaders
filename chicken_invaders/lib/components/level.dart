@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:flame/components.dart';
-import 'package:flame_audio/flame_audio.dart';
 import 'package:flame_tiled/flame_tiled.dart';
 
 import 'package:chicken_invaders/chicken_invaders.dart';
 import 'package:chicken_invaders/components/enemies/blue_bird.dart';
 import 'package:chicken_invaders/components/ship/ship.dart';
 import 'package:chicken_invaders/utils/assets.dart';
+import 'package:chicken_invaders/utils/audio_player.dart';
 import 'package:chicken_invaders/utils/constants.dart';
 
 class Level extends World with HasGameRef<ChickenInvaders> {
@@ -32,7 +32,7 @@ class Level extends World with HasGameRef<ChickenInvaders> {
   @override
   FutureOr<void> onLoad() async {
     if (game.playSounds) {
-      FlameAudio.play(
+      AudioPlayer.play(
         Assets.audio.gameStart,
         volume: Constants.sound.gameStartVolume,
       );
