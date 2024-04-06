@@ -31,10 +31,7 @@ class ShipBase extends SpriteGroupComponent<ShipHealthState>
     super.position,
     super.anchor,
     super.priority,
-    super.current = ShipHealthState.fullHealth,
-  }) {
-    // debugMode = true;
-  }
+  });
 
   @override
   FutureOr<void> onLoad() {
@@ -47,7 +44,22 @@ class ShipBase extends SpriteGroupComponent<ShipHealthState>
       ),
     );
 
+    _updateState();
+
+    game.state.player.health.addListener(_updateState);
+
     return super.onLoad();
+  }
+
+  @override
+  void onRemove() {
+    game.state.player.health.removeListener(_updateState);
+
+    super.onRemove();
+  }
+
+  void _updateState() {
+    current = ShipHealthState.fromHealth(game.state.player.health.value);
   }
 
   Sprite _createSprite({

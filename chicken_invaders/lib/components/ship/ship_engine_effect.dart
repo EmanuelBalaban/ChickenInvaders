@@ -22,44 +22,61 @@ class ShipEngineEffect
     extends SpriteAnimationGroupComponent<ShipEngineEffectType>
     with HasGameRef<ChickenInvaders> {
   ShipEngineEffect({
-    this.engineType = ShipEngineType.base,
     super.position,
     super.anchor,
     super.priority,
-    super.current = ShipEngineEffectType.idle,
-  }) {
-    // debugMode = true;
-  }
+  });
 
-  final ShipEngineType engineType;
-
-  // Constants
   static const _animationStepTime = 0.05;
 
   @override
   FutureOr<void> onLoad() {
-    animations = Map.fromEntries(
-      ShipEngineEffectType.values.map(
-        (state) => MapEntry(
-          state,
-          _createAnimation(state: state),
-        ),
-      ),
-    );
+    _updateAnimations();
+    _updateState();
 
-    // scale = Vector2(0.5, 0.7);
+    game.state.player.shipEngine.addListener(_updateAnimations);
+    game.state.player.shipEngineEffect.addListener(_updateState);
 
     return super.onLoad();
   }
 
+  @override
+  void onRemove() {
+    game.state.player.shipEngine.removeListener(_updateAnimations);
+    game.state.player.shipEngineEffect.removeListener(_updateState);
+
+    super.onRemove();
+  }
+
+  void _updateState() {
+    current = game.state.player.shipEngineEffect.value;
+  }
+
+  void _updateAnimations() {
+    final shipEngine = game.state.player.shipEngine.value;
+
+    animations = Map.fromEntries(
+      ShipEngineEffectType.values.map(
+        (state) => MapEntry(
+          state,
+          _createAnimation(
+            state: state,
+            engine: shipEngine,
+          ),
+        ),
+      ),
+    );
+  }
+
   SpriteAnimation _createAnimation({
     required ShipEngineEffectType state,
+    required ShipEngineType engine,
   }) =>
       SpriteAnimation.fromFrameData(
         game.images.fromCache(
           'Main Ship/'
           'Main Ship - Engine Effects/'
-          'Main Ship - Engines - ${engineType.assetName} Engine - '
+          'Main Ship - Engines - ${engine.assetName} Engine - '
           '${state.assetName}.png',
         ),
         SpriteAnimationData.sequenced(

@@ -58,13 +58,52 @@ class ShipWeapon extends SpriteAnimationGroupComponent<ShipWeaponType>
     super.position,
     super.anchor,
     super.priority,
-    super.current = ShipWeaponType.autoCannon,
-  }) {
-    // debugMode = true;
+  });
+
+  static const _animationStepTime = 0.05;
+
+  double _projectileAccumulatedDt = 0;
+
+  @override
+  FutureOr<void> onLoad() {
+    animations = Map.fromEntries(
+      ShipWeaponType.values.map(
+        (state) => MapEntry(
+          state,
+          _createAnimation(state: state),
+        ),
+      ),
+    );
+
+    _setupAnimationTicker();
+    _updateState();
+
+    game.state.player.shipWeapon.addListener(_updateState);
+
+    return super.onLoad();
   }
 
-  // Constants
-  static const _animationStepTime = 0.05;
+  @override
+  void update(double dt) {
+    _projectileAccumulatedDt += dt;
+    if (game.state.player.firePressed.value) {
+      final coolDownDt = current?.coolDownDt ?? 0;
+
+      if (_projectileAccumulatedDt >= coolDownDt) {
+        _projectileAccumulatedDt = 0;
+        _fire();
+      }
+    }
+
+    super.update(dt);
+  }
+
+  @override
+  void onRemove() {
+    game.state.player.shipWeapon.removeListener(_updateState);
+
+    super.onRemove();
+  }
 
   @override
   set current(ShipWeaponType? value) {
@@ -73,7 +112,11 @@ class ShipWeapon extends SpriteAnimationGroupComponent<ShipWeaponType>
     _setupAnimationTicker();
   }
 
-  void fire() {
+  void _updateState() {
+    current = game.state.player.shipWeapon.value;
+  }
+
+  void _fire() {
     if (game.playSounds) {
       AudioPlayer.play(
         Assets.audio.fireProjectile,
@@ -156,22 +199,6 @@ class ShipWeapon extends SpriteAnimationGroupComponent<ShipWeaponType>
         );
       default:
     }
-  }
-
-  @override
-  FutureOr<void> onLoad() {
-    animations = Map.fromEntries(
-      ShipWeaponType.values.map(
-        (state) => MapEntry(
-          state,
-          _createAnimation(state: state),
-        ),
-      ),
-    );
-
-    _setupAnimationTicker();
-
-    return super.onLoad();
   }
 
   void _setupAnimationTicker() {

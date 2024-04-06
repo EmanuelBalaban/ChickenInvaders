@@ -24,10 +24,7 @@ class ShipEngine extends SpriteGroupComponent<ShipEngineType>
     super.position,
     super.anchor,
     super.priority,
-    super.current = ShipEngineType.base,
-  }) {
-    // debugMode = true;
-  }
+  });
 
   @override
   FutureOr<void> onLoad() async {
@@ -40,9 +37,22 @@ class ShipEngine extends SpriteGroupComponent<ShipEngineType>
       ),
     );
 
-    // scale = Vector2(0.5, 0.5);
+    _updateState();
+
+    game.state.player.shipEngine.addListener(_updateState);
 
     return super.onLoad();
+  }
+
+  @override
+  void onRemove() {
+    game.state.player.shipEngine.removeListener(_updateState);
+
+    super.onRemove();
+  }
+
+  void _updateState() {
+    current = game.state.player.shipEngine.value;
   }
 
   Sprite _createSprite({
