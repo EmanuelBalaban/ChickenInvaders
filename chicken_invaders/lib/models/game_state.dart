@@ -84,4 +84,14 @@ class PlayerState {
 
     weaponNotifier.value = ShipWeaponType.values[nextWeaponIndex];
   }
+
+  void switchEngine() {
+    final engineNotifier = shipEngine;
+
+    final engine = engineNotifier.value;
+
+    final nextEngineIndex = (engine.index + 1) % ShipEngineType.values.length;
+
+    engineNotifier.value = ShipEngineType.values[nextEngineIndex];
+  }
 }

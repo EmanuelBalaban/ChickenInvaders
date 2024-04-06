@@ -6,8 +6,10 @@ import 'package:flame/camera.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
+import 'package:flame/extensions.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
+import 'package:gamepads/gamepads.dart';
 
 import 'package:chicken_invaders/components/hud/fire_button.dart';
 import 'package:chicken_invaders/components/hud/joystick.dart';
@@ -15,7 +17,9 @@ import 'package:chicken_invaders/components/hud/switch_weapon_button.dart';
 import 'package:chicken_invaders/components/level.dart';
 import 'package:chicken_invaders/components/ship/ship.dart';
 import 'package:chicken_invaders/models/app_layout.dart';
+import 'package:chicken_invaders/models/controller_event.dart';
 import 'package:chicken_invaders/models/game_state.dart';
+import 'package:chicken_invaders/utils/double_extensions.dart';
 
 class ChickenInvaders extends FlameGame
     with
@@ -35,6 +39,8 @@ class ChickenInvaders extends FlameGame
   late final FireButton _fireButton;
   late final SwitchWeaponButton _switchWeaponButton;
   late final FpsTextComponent _fpsText;
+
+  StreamSubscription? _gamepadEventsSubscription;
 
   @override
   FutureOr<void> onLoad() async {
@@ -76,6 +82,8 @@ class ChickenInvaders extends FlameGame
     _onAppLayoutUpdates();
     _onShowFpsUpdates();
 
+    _gamepadEventsSubscription = Gamepads.events.listen(_onGamepadEvent);
+
     return super.onLoad();
   }
 
@@ -111,6 +119,7 @@ class ChickenInvaders extends FlameGame
     _joystick.removeListener(_updateJoystick);
     state.appLayout.removeListener(_onAppLayoutUpdates);
     state.showFPS.removeListener(_onShowFpsUpdates);
+    _gamepadEventsSubscription?.cancel();
 
     super.onDispose();
   }
@@ -157,5 +166,29 @@ class ChickenInvaders extends FlameGame
   /// Updates player's movement based on [_joystick]'s state.
   void _updateJoystick() {
     state.player.movement.value = _joystick.relativeDelta;
+  }
+
+  void _onGamepadEvent(GamepadEvent event) {
+    final controllerEvent = ControllerEvent.fromGamepadEvent(event);
+
+    switch (controllerEvent.button) {
+      case ControllerButton.leftStickX:
+        state.player.movement.value.x = controllerEvent.value.withPrecision(2);
+      case ControllerButton.leftStickY:
+        state.player.movement.value.x = controllerEvent.value.withPrecision(2);
+      case ControllerButton.rightTrigger:
+        state.player.firePressed.value = controllerEvent.isPressed;
+      case ControllerButton.x:
+        if (controllerEvent.isPressed) {
+          state.player.switchWeapon();
+        }
+      case ControllerButton.y:
+        if (controllerEvent.isPressed) {
+          state.player.switchEngine();
+        }
+      default:
+    }
+
+    return;
   }
 }

@@ -10,16 +10,19 @@ Chicken Invaders game built with Flutter Flame.
 
 ## To-do
 
-- [ ] Add sound effects
-- [ ] Add support for all guns, shields and ship customizations
-  - [ ] Speed based on the projectile
+- [x] Add sound effects
+- [x] Add support for all guns and ship customizations
+  - [x] Speed based on the projectile
   - [ ] Missiles should build up velocity
-- [ ] Add HUD
-  - [ ] Use SVGs for joystick 
+- [ ] Add support for ship shields
+- [x] Add HUD
+  - [x] Use SVGs for joystick 
   - [ ] In-game HUd
   - [ ] Main menu
     - [ ] Game over menu
     - [ ] Paused menu
+- [x] Add controller support
+- [ ] Fixed dt updates for cross-platform builds
 
 ## Commands
 
