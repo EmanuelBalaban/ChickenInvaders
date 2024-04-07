@@ -6,3 +6,7 @@
 
 1. Install [Flutter](https://docs.flutter.dev/get-started/install)
 2. Install [Tiled](https://www.mapeditor.org/)
+
+## Play in browser
+
+https://emanuelbalaban.github.io/ChickenInvaders/
